@@ -87,7 +87,7 @@ void ParticleVolume::commit()
 {
   Builder::commit();
 
-  numParticles = getParam<int>("numParticles", 1000);
+  numParticles = getParam<int>("numParticles", 3);
   withVolume = getParam<bool>("withVolume", withVolume);
   withIsosurface = getParam<bool>("withIsosurface", withIsosurface);
   isovalue = getParam<float>("isovalue", 0.5f);
@@ -116,8 +116,9 @@ cpp::Group ParticleVolume::buildGroup() const
   // create random number distributions for point center and weight
   std::mt19937 gen(randomSeed);
 
-  range1f weightRange(0.5f, 1.5f);
-  const float radiusScale = 1.f / powf(numParticles, 1.f / 3.f);
+  range1f weightRange(0.0f, 11.0f);
+  // const float radiusScale = 1.f / powf(numParticles, 1.f / 3.f);
+  const float radiusScale = 0.3f;
 
   utility::uniform_real_distribution<float> centerDistribution_x(
       bounds.lower.x, bounds.upper.x);
@@ -133,13 +134,19 @@ cpp::Group ParticleVolume::buildGroup() const
   // populate the points
   for (int i = 0; i < numParticles; i++) {
     auto &p = particles[i];
-    p.x = centerDistribution_x(gen);
-    p.y = centerDistribution_y(gen);
-    p.z = centerDistribution_z(gen);
-    radius[i] = radiusDistribution(gen);
-    weights[i] = provideWeights ? weightDistribution(gen) : 1.f;
+    //p.x = centerDistribution_x(gen);
+    //p.y = centerDistribution_y(gen);
+    //p.z = centerDistribution_z(gen);
+    p.x = i * 1.f;
+    p.y = 0.f;
+    p.z = 0.0f;
+    radius[i] = radiusScale; // * i / numParticles + 0.001; //radiusDistribution(gen);
+    // weights[i] = provideWeights ? weightDistribution(gen) : 1.f;
+    weights[i] = 1.f * i / numParticles;
   }
 
+  std::cout << "Radii: " << radiusScale << " [" << radius[0] << ", " << radius[1] << ", " << radius[2] << "]" << std::endl;
+  std::cout << "Weights: " << " [" << weights[0] << ", " << weights[1] << ", " << weights[2] << "]" << std::endl;
   cpp::Volume volume("particle");
   volume.setParam("particle.position", cpp::CopiedData(particles));
   volume.setParam("particle.radius", cpp::CopiedData(radius));
@@ -154,7 +161,7 @@ cpp::Group ParticleVolume::buildGroup() const
   // AMK: VKL will set the correct valueRange, but we don't have a good way to
   // get that to OSPRay yet. Use the weightRange instead.
   model.setParam(
-      "transferFunction", makeTransferFunction(vec2f(0.f, weightRange.upper)));
+      "transferFunction", makeTransferFunction(vec2f(0.f, 0.66667f)));//weightRange.upper)));
   model.commit();
 
   cpp::Group group;
@@ -249,7 +256,7 @@ cpp::World ParticleVolume::buildWorld() const
 }
 
 OSP_REGISTER_TESTING_BUILDER(
-    ParticleVolume(1000, true, false, false, false, true, 0.f, 4.f),
+    ParticleVolume(1000, true, false, false, false, false, 0.f, 2.0f),
     particle_volume);
 
 OSP_REGISTER_TESTING_BUILDER(

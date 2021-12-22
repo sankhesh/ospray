@@ -29,29 +29,31 @@
 
 static bool g_quitNextFrame = false;
 
-static const std::vector<std::string> g_scenes = {"boxes_lit",
-    "boxes",
-    "cornell_box",
-    "curves",
-    "gravity_spheres_volume",
-    "gravity_spheres_amr",
-    "gravity_spheres_isosurface",
-    "perlin_noise_volumes",
-    "random_spheres",
-    "streamlines",
-    "subdivision_cube",
-    "unstructured_volume",
-    "unstructured_volume_isosurface",
-    "planes",
-    "clip_with_spheres",
-    "clip_with_planes",
-    "clip_gravity_spheres_volume",
-    "clip_perlin_noise_volumes",
-    "clip_particle_volume",
+static const std::vector<std::string> g_scenes = {
+    // "boxes_lit",
+    // "boxes",
+    // "cornell_box",
+    // "curves",
+    // "gravity_spheres_volume",
+    // "gravity_spheres_amr",
+    // "gravity_spheres_isosurface",
+    // "perlin_noise_volumes",
+    // "random_spheres",
+    // "streamlines",
+    // "subdivision_cube",
+    // "unstructured_volume",
+    // "unstructured_volume_isosurface",
+    // "planes",
+    // "clip_with_spheres",
+    // "clip_with_planes",
+    // "clip_gravity_spheres_volume",
+    // "clip_perlin_noise_volumes",
+    // "clip_particle_volume",
     "particle_volume",
-    "particle_volume_isosurface",
-    "vdb_volume",
-    "instancing"};
+    // "particle_volume_isosurface",
+    // "vdb_volume",
+    // "instancing"
+    };
 
 static const std::vector<std::string> g_curveVariant = {
     "bspline", "hermite", "catmull-rom", "linear", "cones"};
